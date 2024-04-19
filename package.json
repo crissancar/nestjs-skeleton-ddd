@@ -1,0 +1,23 @@
+{
+  "name": "ddd-example",
+  "version": "1.0.0",
+  "description": "DDD example with NestJS",
+  "main": "index.js",
+  "scripts": {
+    "deps": "turbo deps",
+    "start:dev": "turbo start:dev",
+    "typeorm:migration:run": "turbo typeorm:migration:run"
+  },
+  "author": "Cristian Sánchez",
+  "license": "MIT",
+  "dependencies": {
+    "turbo": "1.13.2"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "eslint-config-codely": "3.1.3"
+  }
+}
