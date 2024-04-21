@@ -1,3 +1,4 @@
+import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -5,6 +6,10 @@ import { filter, map } from 'rxjs/operators';
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+		if (isRabbitContext(context)) {
+			return next.handle();
+		}
+
 		return next.handle().pipe(
 			filter((data) => !!data),
 			map((data) => {

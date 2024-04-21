@@ -4,6 +4,7 @@ import { Uuid } from '../../../shared/application/services/uuid.service';
 import { UserAudiences } from '../../../shared/domain/enums/user-audiences.enum';
 import { DomainEvent } from '../../../shared/domain/models/domain-event.model';
 import { UserCreatedDomainEvent } from '../events/user-created.domain-event';
+import { UserUpdatedDomainEvent } from '../events/user-updated.domain-event';
 
 export class User extends AggregateRoot<DomainEvent> {
 	readonly id: string;
@@ -16,7 +17,7 @@ export class User extends AggregateRoot<DomainEvent> {
 
 	readonly audiences: Array<UserAudiences>;
 
-	constructor(id: string, name: string, email: string, password: string) {
+	constructor(id: string, name?: string, email?: string, password?: string) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -32,6 +33,22 @@ export class User extends AggregateRoot<DomainEvent> {
 				aggregateId: id,
 				eventId: Uuid.random(),
 				occurredOn: new Date(),
+				attributes: user,
+			}),
+		);
+
+		return user;
+	}
+
+	static update(id: string, name?: string, email?: string): User {
+		const user = new User(id, name, email);
+
+		user.apply(
+			new UserUpdatedDomainEvent({
+				aggregateId: id,
+				eventId: Uuid.random(),
+				occurredOn: new Date(),
+				attributes: user,
 			}),
 		);
 

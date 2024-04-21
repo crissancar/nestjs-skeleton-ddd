@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { RabbitMQModule } from '../rabbitmq/rabbitmq.module';
 import { apiKeysConfig } from './config/api-keys.config';
 import { ApiKeyEntity } from './persistence/api-key.entity';
 import { TypeOrmApiKeyRepository } from './persistence/typeorm-api-key.repository';
@@ -12,10 +11,7 @@ import { ApiKeyStrategy } from './strategies/api-key.strategy';
 const { repositoryInterface } = apiKeysConfig.repository;
 
 @Module({
-	imports: [
-		TypeOrmModule.forFeature([ApiKeyEntity]),
-		RabbitMQModule.forRoot({ queue: 'api_keys_queue' }),
-	],
+	imports: [TypeOrmModule.forFeature([ApiKeyEntity])],
 	providers: [
 		ApiKeyAuthenticator,
 		ApiKeyFinder,

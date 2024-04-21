@@ -5,7 +5,8 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { Params } from 'nestjs-pino';
 import * as pino from 'pino';
 
-import { config } from '../app/index';
+import { SensitiveDataMasker } from '../../app/modules/shared/application/services/sensitive-data-masker.service';
+import { config } from '../app';
 import { CORRELATION_ID_HEADER } from '../middlewares/correlation-id.middleware';
 
 const { logger, environment } = config;
@@ -29,7 +30,9 @@ export const loggerConfig: Params = {
 				return { request: { headers } };
 			}
 
-			return { request: { headers, body } };
+			const maskedBody = SensitiveDataMasker.mask(body);
+
+			return { request: { headers, body: maskedBody } };
 		},
 		customSuccessMessage: (req: IncomingMessage, res: ServerResponse) => {
 			const correlationId = res.getHeader('x-correlation-id') as string;
@@ -94,7 +97,7 @@ function transportConfig(): pino.TransportSingleOptions {
 					destination: 'artifacts/logs/app.log',
 					mkdir: true,
 				},
-		  }
+			}
 		: {
 				target: 'pino-pretty',
 				options: {
@@ -102,7 +105,7 @@ function transportConfig(): pino.TransportSingleOptions {
 					ignore: 'pid,hostname,time',
 					colorize: true,
 				},
-		  };
+			};
 }
 
 function formattersConfig(): object {

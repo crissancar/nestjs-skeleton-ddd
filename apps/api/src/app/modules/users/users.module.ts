@@ -3,10 +3,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { RabbitMQModule } from '../rabbitmq/rabbitmq.module';
-import { CreateUserCommandHandler } from './application/commands/handlers/create-user-command.handler';
-import { UserCreatedEventHandler } from './application/events/handlers/user-created-event.handler';
 import { UserCreator } from './application/services/user-creator.service';
-import { UserEventsController } from './infrastructure/controllers/user-events.controller';
+import { CreateUserCommandHandler } from './infrastructure/commands/handlers/create-user-command.handler';
 import { UserPostController } from './infrastructure/controllers/user-post.controller';
 import { TypeOrmUserRepository } from './infrastructure/persistence/typeorm-user.repository';
 import { UserEntity } from './infrastructure/persistence/user.entity';
@@ -19,13 +17,12 @@ const { repositoryInterface } = usersConfig.repository;
 	imports: [
 		TypeOrmModule.forFeature([UserEntity]),
 		CqrsModule.forRoot(),
-		RabbitMQModule.forRoot({ queue: 'users_queue' }),
+		RabbitMQModule.forRoot({ exchange: 'users_exchange' }),
 	],
-	controllers: [UserPostController, UserEventsController],
+	controllers: [UserPostController],
 	providers: [
 		UserCreator,
 		UserEntitySubscriber,
-		UserCreatedEventHandler,
 		CreateUserCommandHandler,
 		{ provide: repositoryInterface, useClass: TypeOrmUserRepository },
 	],

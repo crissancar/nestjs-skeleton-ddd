@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { SwaggerModule } from '@nestjs/swagger';
 import SendGrid from '@sendgrid/mail';
 import * as Sentry from '@sentry/node';
@@ -11,7 +10,7 @@ import { Logger } from 'nestjs-pino';
 import responseTime from 'response-time';
 
 import { AppModule } from './app/app.module';
-import { config } from './config/app/index';
+import { config } from './config/app';
 import { WelcomeLogs } from './config/logger/welcome-logs.config';
 import { SentryConfig } from './config/sentry/sentry.config';
 import { SwaggerConfig } from './config/swagger/swagger.config';
@@ -20,31 +19,6 @@ const { sentry, sendgrid, api } = config;
 
 async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
-
-	app.connectMicroservice<MicroserviceOptions>({
-		transport: Transport.RMQ,
-		options: {
-			urls: ['amqps://gtpxvtbs:SI4GqOE8sm7Zryv9b5xqlTcBqBXdd-92@rat.rmq2.cloudamqp.com/gtpxvtbs'],
-			queue: 'users_queue',
-			queueOptions: { durable: true },
-		},
-	});
-	app.connectMicroservice<MicroserviceOptions>({
-		transport: Transport.RMQ,
-		options: {
-			urls: ['amqps://gtpxvtbs:SI4GqOE8sm7Zryv9b5xqlTcBqBXdd-92@rat.rmq2.cloudamqp.com/gtpxvtbs'],
-			queue: 'auth_queue',
-			queueOptions: { durable: true },
-		},
-	});
-	app.connectMicroservice<MicroserviceOptions>({
-		transport: Transport.RMQ,
-		options: {
-			urls: ['amqps://gtpxvtbs:SI4GqOE8sm7Zryv9b5xqlTcBqBXdd-92@rat.rmq2.cloudamqp.com/gtpxvtbs'],
-			queue: 'api_keys_queue',
-			queueOptions: { durable: true },
-		},
-	});
 
 	// Set Sentry
 	if (sentry.enabled) {
@@ -84,11 +58,9 @@ async function bootstrap(): Promise<void> {
 		app.use(responseTime());
 	}
 
-	// Launch the microservices
-	await app.startAllMicroservices();
 	// Launch the app
 	await app.listen(api.port);
-	const m = app.getMicroservices();
+
 	// Welcome logs
 	WelcomeLogs.run();
 }

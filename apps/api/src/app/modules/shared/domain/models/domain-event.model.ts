@@ -6,14 +6,10 @@ export interface DomainEventParams {
 	aggregateId: string;
 	eventId: string;
 	occurredOn: Date;
-}
-export interface DomainEventFromPrimitives {
-	toPrimitives(): never;
+	attributes: unknown;
 }
 
-export abstract class DomainEvent implements DomainEventFromPrimitives {
-	static fromPrimitives: (params: DomainEventFromPrimitives) => DomainEvent;
-
+export class DomainEvent {
 	readonly eventName: string;
 
 	readonly aggregateId: string;
@@ -22,19 +18,14 @@ export abstract class DomainEvent implements DomainEventFromPrimitives {
 
 	readonly occurredOn: Date;
 
-	protected constructor(params: DomainEventParams) {
-		const { aggregateId, eventName, eventId, occurredOn } = params;
+	readonly attributes: unknown;
+
+	constructor(params: DomainEventParams) {
+		const { aggregateId, eventName, eventId, occurredOn, attributes } = params;
 		this.aggregateId = aggregateId;
 		this.eventId = eventId || Uuid.random();
 		this.occurredOn = occurredOn || new Date();
 		this.eventName = eventName;
+		this.attributes = attributes;
 	}
-
-	abstract toPrimitives(): never;
 }
-
-export type DomainEventClass = {
-	EVENT_NAME: string;
-	QUEUE: string;
-	fromPrimitives(params: DomainEventFromPrimitives): DomainEvent;
-};

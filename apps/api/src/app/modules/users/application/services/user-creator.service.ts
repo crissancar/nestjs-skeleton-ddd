@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 
-import { RabbitMQEventBus } from '../../../rabbitmq/services/rabbitmq-event-bus.service';
+import { RabbitMQEventBus } from '../../../rabbitmq/infrastructure/services/rabbitmq-event-bus.service';
 import { LoggerFactory } from '../../../shared/application/services/logger-factory.service';
 import { TypeOrmError } from '../../../shared/application/services/typeorm-error.service';
 import { User } from '../../domain/aggregates/user.aggregate';
@@ -21,17 +21,16 @@ const logger = LoggerFactory.create(context);
 export class UserCreator {
 	constructor(
 		@Inject(repositoryInterface) private readonly repository: UserRepository,
-		@Inject('RabbitMQEventBus') private readonly eventBus: RabbitMQEventBus,
+		private readonly eventBus: RabbitMQEventBus,
 	) {}
 
 	async run(request: CreateUserRequest): Promise<CreateUserResponse> {
 		const user = User.create(request.id, request.name, request.email, request.password);
 
 		try {
-			// const createdUser = await this.repository.create(user);
-			const createdUser = user;
+			const createdUser = await this.repository.create(user);
 
-			this.eventBus.emitAggregateEvents(user);
+			await this.eventBus.publish(user);
 
 			return CreateUserResponse.create(createdUser);
 		} catch (error) {
