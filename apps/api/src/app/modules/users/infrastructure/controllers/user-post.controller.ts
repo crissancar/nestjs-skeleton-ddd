@@ -3,10 +3,10 @@ import { CommandBus } from '@nestjs/cqrs';
 
 import { LoggerFactory } from '../../../shared/application/services/logger-factory.service';
 import { UuidGenerator } from '../../../shared/infrastructure/decorators/uuid-generator.decorator';
-import { CreateUserCommand } from '../../application/commands/create-user.command';
 import { CreateUserRequest } from '../../application/dtos/create-user-request.dto';
 import { CreateUserResponse } from '../../application/dtos/create-user-response.dto';
 import { usersConfig } from '../../users.config';
+import { CreateUserCommand } from '../commands/create-user.command';
 import { CreateUserSwagger } from '../swagger/decorators/create-user-swagger.decorator';
 
 const { globalRoute, postController } = usersConfig;

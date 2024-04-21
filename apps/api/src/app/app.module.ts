@@ -13,6 +13,7 @@ import { AdminUsersModule } from './modules/admin-users/admin-users.module';
 import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AxiosModule } from './modules/axios/axios.module';
+import { MessagesModule } from './modules/messages/messages.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -26,6 +27,7 @@ import { UsersModule } from './modules/users/users.module';
 		AuthModule,
 		AxiosModule,
 		UsersModule,
+		MessagesModule,
 	],
 	controllers: [AppController],
 	providers: providersConfig,

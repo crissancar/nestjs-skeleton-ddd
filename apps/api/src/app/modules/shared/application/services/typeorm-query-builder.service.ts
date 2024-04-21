@@ -42,6 +42,10 @@ export class TypeOrmQueryBuilder<T> {
 		this._queryBuilder.offset(offset);
 	}
 
+	async executeGetMany(): Promise<Array<T>> {
+		return this._queryBuilder.getMany();
+	}
+
 	async executeGetManyAndCount(): Promise<CriteriaResult<T>> {
 		const [data, count] = await this._queryBuilder.getManyAndCount();
 

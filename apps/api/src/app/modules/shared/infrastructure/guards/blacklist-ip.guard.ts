@@ -8,7 +8,7 @@ export class BlacklistIPGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest<Request>();
 
-		const ip = String(request.headers['x-forwarded-for']);
+		// const ip = String(request.headers['x-forwarded-for']);
 
 		// await this.checker.run(ip);
 

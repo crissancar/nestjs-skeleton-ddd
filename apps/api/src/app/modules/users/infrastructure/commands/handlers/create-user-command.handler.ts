@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateUserResponse } from '../../dtos/create-user-response.dto';
-import { UserCreator } from '../../services/user-creator.service';
+import { CreateUserResponse } from '../../../application/dtos/create-user-response.dto';
+import { UserCreator } from '../../../application/services/user-creator.service';
 import { CreateUserCommand } from '../create-user.command';
 
 @CommandHandler(CreateUserCommand)
