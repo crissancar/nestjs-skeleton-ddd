@@ -1,9 +1,9 @@
-import { FindOptionsWhere, ILike } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 
 import { CriteriaQuery } from '../../../shared/domain/interfaces/criteria-query.interface';
 import { SortColumn } from '../../../shared/domain/types/sort-column.type';
 import { SortOrder } from '../../../shared/domain/types/sort-order.type';
-import { FindMessagesByCriteriaRequest } from '../../application/dtos/find-messages-by-criteria.request.dto';
+import { FindMessagesByCriteriaRequest } from '../../application/dtos/find-messages-by-criteria-request.dto';
 import { MessageEntity } from './message.entity';
 
 export class MessageCriteriaQuery implements CriteriaQuery<MessageEntity> {
@@ -17,8 +17,6 @@ export class MessageCriteriaQuery implements CriteriaQuery<MessageEntity> {
 
 	readonly skip: number;
 
-	readonly sortName: string;
-
 	readonly sortColumn: SortColumn<MessageEntity>;
 
 	readonly sortOrder: SortOrder;
@@ -28,7 +26,6 @@ export class MessageCriteriaQuery implements CriteriaQuery<MessageEntity> {
 		eventName: string,
 		take: number,
 		page: number,
-		sortName: string,
 		sortColumn: SortColumn<MessageEntity>,
 		sortOrder: SortOrder,
 	) {
@@ -37,26 +34,21 @@ export class MessageCriteriaQuery implements CriteriaQuery<MessageEntity> {
 		this.take = take ?? 10;
 		this.page = page ?? 1;
 		this.skip = (this.page - 1) * this.take;
-		this.sortName = sortName;
 		this.sortColumn = sortColumn ?? 'createdAt';
 		this.sortOrder = sortOrder ?? 'DESC';
 	}
 
 	static create(request: FindMessagesByCriteriaRequest): MessageCriteriaQuery {
-		const { eventName, keyword, take, page, sortName, sortColumn, sortOrder } = request;
+		const { eventName, take, page, sortColumn, sortOrder } = request;
 
-		const where = this.createFindOptionsWhere(eventName, keyword);
+		const where = this.createFindOptionsWhere(eventName);
 
-		return new MessageCriteriaQuery(where, eventName, take, page, sortName, sortColumn, sortOrder);
+		return new MessageCriteriaQuery(where, eventName, take, page, sortColumn, sortOrder);
 	}
 
-	private static createFindOptionsWhere(
-		eventName: string,
-		keyword: string,
-	): FindOptionsWhere<MessageEntity> {
+	private static createFindOptionsWhere(eventName: string): FindOptionsWhere<MessageEntity> {
 		return {
 			...(eventName && { eventName }),
-			...(keyword && { email: ILike(`%${keyword}%`) }),
 		};
 	}
 }

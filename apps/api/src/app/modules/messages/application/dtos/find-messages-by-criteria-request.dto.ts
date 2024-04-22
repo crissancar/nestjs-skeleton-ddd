@@ -10,24 +10,13 @@ import { ValidateTake } from '../../../shared/infrastructure/decorators/validate
 import { MessageEntity } from '../../infrastructure/persistence/message.entity';
 import { messagePropertiesSwagger } from '../../infrastructure/swagger/properties/message-properties.swagger';
 
-const { eventName, keyword, sortName, sortColumn, sortOrder, take, page } =
-	messagePropertiesSwagger;
+const { eventName, sortColumn, sortOrder, take, page } = messagePropertiesSwagger;
 
 export class FindMessagesByCriteriaRequest {
 	@ApiProperty(eventName)
 	@IsOptional()
 	@IsString()
 	readonly eventName?: string;
-
-	@ApiProperty(keyword)
-	@IsOptional()
-	@IsString()
-	readonly keyword?: string;
-
-	@ApiProperty(sortName)
-	@IsOptional()
-	@IsString()
-	readonly sortName?: string;
 
 	@ApiProperty(sortColumn)
 	@ValidateSortColumn(MessageEntity)

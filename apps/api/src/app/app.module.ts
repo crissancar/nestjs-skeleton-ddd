@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
 
@@ -12,7 +11,6 @@ import { AppController } from './app.controller';
 import { AdminUsersModule } from './modules/admin-users/admin-users.module';
 import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { AxiosModule } from './modules/axios/axios.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -20,12 +18,10 @@ import { UsersModule } from './modules/users/users.module';
 	imports: [
 		LoggerModule.forRoot(loggerConfig),
 		TypeOrmModule.forRoot(typeOrmConfig),
-		EventEmitterModule.forRoot(),
 		CqrsModule.forRoot(),
 		AdminUsersModule,
 		ApiKeysModule,
 		AuthModule,
-		AxiosModule,
 		UsersModule,
 		MessagesModule,
 	],

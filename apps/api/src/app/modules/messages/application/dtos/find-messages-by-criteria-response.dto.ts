@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { CriteriaResult } from '../../../shared/domain/interfaces/criteria-result.interface';
 import { Message } from '../../domain/models/message.model';
-import { MessageCriteriaQuery } from '../../infrastructure/persistence/message-criteria.query';
 import { messagePropertiesSwagger } from '../../infrastructure/swagger/properties/message-properties.swagger';
+import { FindMessagesByCriteriaRequest } from './find-messages-by-criteria-request.dto';
 
 const { messagesCriteria } = messagePropertiesSwagger;
 
@@ -34,11 +34,11 @@ export class FindMessagesByCriteriaResponse {
 	}
 
 	static create(
-		query: MessageCriteriaQuery,
+		request: FindMessagesByCriteriaRequest,
 		criteriaResult: CriteriaResult<Message>,
 	): FindMessagesByCriteriaResponse {
 		const { data, count } = criteriaResult;
-		const { take, page } = query;
+		const { take, page } = request;
 		const currentCount = data.length;
 
 		return new FindMessagesByCriteriaResponse(data, count, currentCount, take, page);

@@ -25,7 +25,7 @@ export class RabbitMQEventBus {
 
 				try {
 					await this.connection.publish(exchange, eventName, event);
-					aggregate.commit();
+
 					logger.debug(
 						`Message <${event.eventId}> published to exchange <${exchange}> with binding key <${eventName}>`,
 					);
@@ -37,5 +37,7 @@ export class RabbitMQEventBus {
 				}
 			}),
 		);
+
+		aggregate.commit();
 	}
 }

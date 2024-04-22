@@ -7,25 +7,29 @@ export const messagePropertiesSwagger = {
 		example: 'user.created',
 		required: true,
 	},
-	sortName: {
-		type: String,
-		description: 'Sort the response by user name',
-		example: 'API',
-		required: false,
-	},
 	messagesCriteria: {
 		example: [
 			{
-				id: 'd77b8d13-550c-4579-8f57-dfdda982448b',
-				eventId: '',
-				eventName: '',
-				data: '',
+				id: 'd594db68-ae8b-425c-a519-ab4bce45b07a',
+				eventId: 'd8fdcd22-4c8f-4fa7-9a5f-257519c9b313',
+				eventName: 'user.created',
+				data: {
+					id: '01e88d1f-ffbe-40a1-a14b-b2f8a24a7447',
+					name: 'John Doe',
+					email: 'john.doe@mail.com',
+					password: '*',
+				},
 			},
 			{
-				id: '6e2f0f00-e23e-4b89-acea-ca5d2cab55a9',
-				eventId: '',
-				eventName: '',
-				data: '',
+				id: 'f9dd4f99-321e-483f-84ab-1f6bc61fff61',
+				eventId: 'cf2ca631-0624-4a08-af6e-2114444d6b31',
+				eventName: 'user.created',
+				data: {
+					id: '2503c4cf-dda0-4c41-a556-3f69de8fa0f1',
+					name: 'Jane Doe',
+					email: 'jane.doe@mail.com',
+					password: '*',
+				},
 			},
 		],
 	},
